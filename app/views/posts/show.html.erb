@@ -1,0 +1,55 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @post.title %>
+</p>
+
+<p>
+  <strong>Body:</strong>
+  <%= @post.body %>
+</p>
+
+
+<% if current_user.my_like?(@post) %>
+  <%= link_to 'いいね済み', likes_unlike_path(p_id: @post.id,u_id: current_user.id,return_url: request.original_url) %>
+  <% if @post.likes.count != 0 %>
+    <%= @post.likes.count %>
+  <% end %>
+<% else %>
+  <%= link_to 'いいね', likes_like_path(p_id: @post.id,u_id: current_user.id,return_url: request.original_url) %>
+  <% if @post.likes.count != 0 %>
+    <%= @post.likes.count %>
+  <% end %>
+<% end %>
+<% if current_user.id == @post.user_id %>
+  <%= link_to '削除', post_path, method: :delete, data: { confirm: 'Are you sure?' } %></td> 
+<% else %>
+<%= link_to 'いいね', likes_like_path(p_id: @post.id, return_url: request.original_url) %>
+<% if @post.likes.count != 0 %>
+  <%= @post.likes.count %>
+<% end %>
+
+
+
+<% @comments.each do |comment| %>
+  <div class="panel panel-success">
+    <div class="panel-body">
+    　<div class="media text-muted">
+        <p class="media-body pb-1 pl-1 mb-0 small lh-125 border-bottom border-gray" align="left">
+          <strong class="d-block text-gray-dark">
+            <br>
+            <%= link_to comment.body, comment_path(comment.id) %>
+          </strong>
+        </p>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+
+
+
+
+<%= link_to 'Edit', edit_post_path(@post) %> |
+<%= link_to 'Back', posts_path %>
